@@ -4,6 +4,8 @@ platform:
 cache:
   - c:\tools\vcpkg\installed\
 environment:
+  CODECOV_TOKEN:
+    secure: dz7q7ZdmeAjy2gMUTZFiCt7z9tuGAEWwLF0IP08oqD6JSjYsv1y3vEqDWF6/Vgns
   matrix:
   - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
   - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
