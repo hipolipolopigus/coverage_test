@@ -10,16 +10,20 @@ environment:
     QT_COMPILER: mingw53_32
 install:
   - git submodule update --init --recursive
-  - cmd: appveyor DownloadFile https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-win.zip -FileName ninja.zip
-  - cmd: 7z x ninja.zip -oC:\projects\deps\ninja > nul
-  - cmd: set PATH=C:\projects\deps\ninja;%PATH%
-  - sh: sudo apt update; sudo apt install -y qt5-default ninja
-  - ninja --version
+  - cmd: set VCPKG_DEFAULT_TRIPLET=x64-windows
+  - cmd: vcpkg install gtest
+  - sh: sudo apt update; sudo apt install -y qt5-default ninja; sudo ninja --version
+  - sh: mkdir ~/googletest
+  - sh: pushd ~/googletest
+  - sh: wget -qO - https://github.com/google/googletest/archive/release-1.8.0.tar.gz | tar -xz
+  - sh: cmake -D CMAKE_INSTALL_PREFIX:PATH=$HOME/googletest -D CMAKE_BUILD_TYPE=Release googletest-release-1.8.0
+  - sh: make install
+  - sh: popd
 build_script:
   - cmd: call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat" %ARCH%
   - mkdir build
   - cd build
-  - cmd: cmake -G Ninja -DQt5_DIR=C:/Qt/%QT_VERSION%/%QT_COMPILER%/lib/cmake/Qt5 -DCMAKE_BUILD_TYPE=Release ..
+  - cmd: cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake -DQt5_DIR=C:/Qt/%QT_VERSION%/%QT_COMPILER%/lib/cmake/Qt5 -DCMAKE_BUILD_TYPE=Release ..
   - sh: cmake -G Ninja -DQt5_DIR=C:/Qt/$QT_VERSION/$QT_COMPILER/lib/cmake/Qt5 -DCMAKE_BUILD_TYPE=Debug ..
   - cmake --build .
   - ../.bin/Debug/lib_tests --gtest_output="xml:tests.xml"
