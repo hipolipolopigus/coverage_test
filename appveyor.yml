@@ -1,6 +1,8 @@
 version: 0.0.{build}
 platform:
   - x64
+cache:
+  - c:\tools\vcpkg\installed\
 environment:
   matrix:
   - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu

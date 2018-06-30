@@ -6,6 +6,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/.bin/${CMAKE_BUILD_TYPE})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/.lib/${CMAKE_BUILD_TYPE})
 message(STATUS "Bin Directory: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
 
+include(cmake/platform.cmake)
 include(cmake/coverage.cmake)
 include(cmake/gtest.cmake)
 include(cmake/qt5.cmake)
