@@ -1,18 +1,16 @@
 version: 0.0.{build}
 environment:
-  QT_VERSION: 5.10.1
   matrix:
+  - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
   - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     ARCH: x64
     QT_COMPILER: msvc2017_64
-  - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
-    ARCH: x86
-    QT_COMPILER: mingw53_32
+    QT_VERSION: 5.10.1
 install:
   - git submodule update --init --recursive
   - cmd: set VCPKG_DEFAULT_TRIPLET=x64-windows
   - cmd: vcpkg install gtest
-  - sh: sudo apt update; sudo apt install -y qt5-default ninja; sudo ninja --version
+  - sh: sudo apt update; sudo apt install -y qt5-default
   - sh: mkdir ~/googletest
   - sh: pushd ~/googletest
   - sh: wget -qO - https://github.com/google/googletest/archive/release-1.8.0.tar.gz | tar -xz
@@ -24,7 +22,7 @@ build_script:
   - mkdir build
   - cd build
   - cmd: cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake -DQt5_DIR=C:/Qt/%QT_VERSION%/%QT_COMPILER%/lib/cmake/Qt5 -DCMAKE_BUILD_TYPE=Release ..
-  - sh: cmake -G Ninja -DQt5_DIR=C:/Qt/$QT_VERSION/$QT_COMPILER/lib/cmake/Qt5 -DCMAKE_BUILD_TYPE=Debug ..
+  - sh: cmake -DCMAKE_BUILD_TYPE=Debug ..
   - cmake --build .
   - ../.bin/Debug/lib_tests --gtest_output="xml:tests.xml"
   - sh: ../coverage.sh
