@@ -1,5 +1,4 @@
 version: 0.0.{build}
-architecture: x64
 environment:
   QT_VERSION: 5.10.1
   matrix:
