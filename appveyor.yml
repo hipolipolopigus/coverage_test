@@ -28,5 +28,9 @@ build_script:
   - cmd: cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake -DQt5_DIR=C:/Qt/%QT_VERSION%/%QT_COMPILER%/lib/cmake/Qt5 -DCMAKE_BUILD_TYPE=Release ..
   - sh: cmake -DCMAKE_BUILD_TYPE=Debug -DGTEST_ROOT:PATH=$HOME/googletest ..
   - cmake --build .
+test_script:
   - sh: ../.bin/Debug/lib_tests --gtest_output="xml:tests.xml"
-  - sh: ../coverage.sh
+after_test:
+  - sh: lcov -c -d . -o coverage.info
+  - sh: lcov -r coverage.info '*/mingw64/*' '*/mingw32/*' '/c/Qt/*' '*/test/*'  -o coverage.info
+  - sh: bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
