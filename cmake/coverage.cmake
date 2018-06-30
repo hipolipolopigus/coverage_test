@@ -1,0 +1,7 @@
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+	if(CMAKE_BUILD_TYPE MATCHES Debug)
+		link_libraries(gcov)
+		SET(CMAKE_CXX_FLAGS "-g -O0 -fprofile-arcs -ftest-coverage")
+		SET(CMAKE_C_FLAGS "-g -O0 -fprofile-arcs -ftest-coverage")
+	endif()
+endif()

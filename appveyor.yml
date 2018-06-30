@@ -1,0 +1,27 @@
+version: 0.0.{build}
+architecture: x64
+environment:
+  QT_VERSION: 5.10.1
+  matrix:
+  - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    ARCH: x64
+    QT_COMPILER: msvc2017_64
+  - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    ARCH: x86
+    QT_COMPILER: mingw53_32
+install:
+  - git submodule update --init --recursive
+  - cmd: appveyor DownloadFile https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-win.zip -FileName ninja.zip
+  - cmd: 7z x ninja.zip -oC:\projects\deps\ninja > nul
+  - cmd: set PATH=C:\projects\deps\ninja;%PATH%
+  - sh: sudo apt update; sudo apt install -y qt5-default ninja
+  - ninja --version
+build_script:
+  - cmd: call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat" %ARCH%
+  - mkdir build
+  - cd build
+  - cmd: cmake -G Ninja -DQt5_DIR=C:/Qt/%QT_VERSION%/%QT_COMPILER%/lib/cmake/Qt5 -DCMAKE_BUILD_TYPE=Release ..
+  - sh: cmake -G Ninja -DQt5_DIR=C:/Qt/$QT_VERSION/$QT_COMPILER/lib/cmake/Qt5 -DCMAKE_BUILD_TYPE=Debug ..
+  - cmake --build .
+  - ../.bin/Debug/lib_tests --gtest_output="xml:tests.xml"
+  - sh: ../coverage.sh
