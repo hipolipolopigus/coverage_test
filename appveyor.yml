@@ -14,7 +14,7 @@ install:
   - git submodule update --init --recursive
   - cmd: set VCPKG_DEFAULT_TRIPLET=x64-windows
   - cmd: vcpkg install gtest
-  - sh: sudo apt update; sudo apt install -y qt5-default
+  - sh: sudo apt update; sudo apt install -y qt5-default lcov
   - sh: mkdir ~/googletest
   - sh: pushd ~/googletest
   - sh: wget -qO - https://github.com/google/googletest/archive/release-1.8.0.tar.gz | tar -xz
