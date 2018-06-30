@@ -34,6 +34,6 @@ test_script:
   - sh: ../.bin/Debug/lib_tests --gtest_output="xml:tests.xml"
 after_test:
   - sh: lcov -c -d . -o coverage.info
-  - sh: lcov -r coverage.info '*/mingw64/*' '*/mingw32/*' '/c/Qt/*' '*/test/*'  -o coverage.info
+  - sh: lcov -r coverage.info '*/mingw64/*' '*/mingw32/*' '/c/Qt/*' '*/test/*' -o coverage.info
   - sh: bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
   - sh: curl --data-binary @tests.xml https://ci.appveyor.com/api/testresults/junit/$APPVEYOR_JOB_ID
